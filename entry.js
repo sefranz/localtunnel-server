@@ -11,22 +11,23 @@ const debug = Debug('localtunnel');
 const { argv } = optimist
   .usage('Usage: $0 --port [num]')
   .options('secure', {
-    default: false,
+    default: process.env.SECURE || false,
     describe: 'use this flag to indicate proxy over https',
   })
   .options('port', {
-    default: '80',
+    default: process.env.PORT || '80',
     describe: 'listen on this port for outside requests',
   })
   .options('address', {
-    default: '0.0.0.0',
+    default: process.env.ADDRESS || '0.0.0.0',
     describe: 'IP address to bind to',
   })
   .options('domain', {
+    default: process.env.DOMAIN || undefined,
     describe: 'Specify the base domain name. This is optional if hosting localtunnel from a regular example.com domain. This is required if hosting a localtunnel server from a subdomain (i.e. lt.example.dom where clients will be client-app.lt.example.come)',
   })
   .options('max-sockets', {
-    default: 10,
+    default: process.env.MAX_SOCKETS || 10,
     describe: 'maximum number of tcp sockets each client is allowed to establish at one time (the tunnels)',
   });
 
@@ -60,5 +61,3 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, promise) => {
   log.error(reason);
 });
-
-// vim: ft=javascript
