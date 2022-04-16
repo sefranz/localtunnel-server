@@ -6,7 +6,7 @@ import Debug from 'debug';
 
 import CreateServer from './lib/Server.js';
 
-const debug = Debug('localtunnel');
+const debug = Debug('lt');
 
 const { argv } = optimist
   .usage('Usage: $0 --port [num]')
@@ -36,14 +36,15 @@ if (argv.help) {
   process.exit();
 }
 
-const server = CreateServer({
+CreateServer({
+  port: argv.port,
+  address: argv.address,
   max_tcp_sockets: argv['max-sockets'],
   secure: argv.secure,
   domain: argv.domain,
-});
-
-server.listen(argv.port, argv.address, () => {
-  debug('server listening on port: %d', server.address().port);
+  then: (server) => {
+    debug('server listening on port: %d', server.address().port);
+  }
 });
 
 process.on('SIGINT', () => {
